@@ -145,7 +145,6 @@
 
     .hint{ margin-top:10px; color:var(--muted); font-size:12px; }
 
-    /* Tabla */
     .table-wrap{
       overflow:auto;
       max-height:610px;
@@ -171,586 +170,137 @@
       padding:10px;
       border-bottom:1px solid rgba(17,24,39,.08);
       font-size:13px;
-      vertical-align:top;
       white-space:nowrap;
     }
     tbody tr:hover td{ background:#f9fafb; }
     .num{ text-align:right; font-variant-numeric: tabular-nums; }
-
-    /* Logo grande en esquina inferior derecha (zona roja) */
-    .corner-logo{
-      position:absolute;
-      right:18px;
-      bottom:18px;
-      width:160px;
-      height:160px;
-      border-radius:18px;
-      border:1px solid rgba(17,24,39,.10);
-      background:#fff;
-      box-shadow: 0 18px 45px rgba(0,0,0,.14);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:14px;
-      pointer-events:none; /* no estorba scroll/clicks */
-    }
-    .corner-logo img{
-      width:100%;
-      height:100%;
-      object-fit:contain;
-      filter: drop-shadow(0 6px 10px rgba(0,0,0,.18));
-    }
-    @media (max-width: 1100px){
-      /* en móvil: más pequeño para no tapar */
-      .corner-logo{ width:120px; height:120px; right:12px; bottom:12px; }
-    }
-
-    /* Dialogs */
-    dialog{
-      width:min(760px, calc(100% - 24px));
-      border:none;
-      border-radius:18px;
-      padding:0;
-      background:#ffffff;
-      color:var(--text);
-      box-shadow: 0 30px 90px rgba(0,0,0,.35);
-      border:1px solid rgba(17,24,39,.12);
-    }
-    dialog::backdrop{ background:rgba(0,0,0,.35); backdrop-filter: blur(2px); }
-    .dlg-hd{ padding:14px 16px; border-bottom:1px solid rgba(17,24,39,.10); display:flex; justify-content:space-between; align-items:center; gap:10px; }
-    .dlg-hd b{ font-size:14px; }
-    .dlg-bd{ padding:14px 16px 4px; }
-    .dlg-ft{ padding:12px 16px 16px; display:flex; gap:10px; justify-content:flex-end; }
-
-    .form{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
-    @media (max-width: 920px){ .form{ grid-template-columns:1fr; } }
-    label{ display:flex; flex-direction:column; gap:6px; font-size:12px; color:var(--muted); }
-    input{
-      padding:10px 12px;
-      border-radius:12px;
-      border:1px solid rgba(17,24,39,.14);
-      background:#fff;
-      color:var(--text);
-      outline:none;
-      font-size:13px;
-    }
-    input::placeholder{ color: rgba(107,114,128,.55); }
-    input:focus{ border-color: rgba(37,99,235,.65); box-shadow: 0 0 0 3px rgba(37,99,235,.18); }
-    .row2{ grid-column: 1 / -1; }
-    .small{ font-size:12px; color:var(--muted); margin-top:10px; }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <img src="Logo.png" alt="Logo" onerror="this.style.display='none'">
-        <div>
-          <h1>Cálculo cotas tubería y coordenadas</h1>
-          <p class="sub">
-            Tabla por puntos (Abs): para N tubos se generan N+1 coordenadas (incluye K0+000.600 y el cierre).
-            K0+000.000 = Nodo Pozo. Coordenadas sobre la línea Pozo→Caja.
-            Longitud entre nodos se calcula por coordenadas; Longitud efectiva = Lgeom − (0.60 + 0.40).
-          </p>
-        </div>
-      </div>
+<div class="wrap">
 
-      <div class="toolbar">
-        <span class="pill"><span class="dot" id="statusDot"></span><span id="statusText">Listo</span></span>
-        <button class="primary" id="btnBasic">Editar datos básicos</button>
-        <button id="btnCSV">Exportar CSV</button>
-        <button id="btnClear">Limpiar todo</button>
-      </div>
-    </header>
-
-    <section class="grid">
-      <div class="card">
-        <h2>Datos básicos</h2>
-        <div class="kv" id="basicKV"></div>
-        <div class="hint">Entradas: Pozo 0.60 m, Caja 0.40 m. Diámetro y espesor en metros.</div>
-      </div>
-
-      <div class="card" id="tableCard">
-        <h2>Tabla (puntos / Abs)</h2>
-
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th style="min-width:80px;">Punto</th>
-                <th style="min-width:140px;">Abs</th>
-                <th style="min-width:120px;" class="num">Dist (m)</th>
-                <th style="min-width:130px;" class="num">Cota Lomo</th>
-                <th style="min-width:140px;" class="num">Cota Excavación</th>
-                <th style="min-width:140px;" class="num">Cota Gravilla</th>
-                <th style="min-width:150px;" class="num">Norte</th>
-                <th style="min-width:150px;" class="num">Este</th>
-                <th style="min-width:190px;">Tubo (si aplica)</th>
-              </tr>
-            </thead>
-            <tbody id="tbody"></tbody>
-          </table>
-        </div>
-
-        <div class="hint">
-          Se listan todos los puntos: 0.600, 0.600+Lt, ..., 0.600+N·Lt (incluye el final).
-          El “Tubo i” va del Punto i al Punto i+1.
-        </div>
-
-        <!-- LOGO GRANDE (zona roja) -->
-        <div class="corner-logo" aria-hidden="true">
-          <img src="Logo.png" alt="" onerror="this.parentElement.style.display='none'">
-        </div>
-      </div>
-    </section>
+<header>
+  <div class="brand">
+    <img src="Logo.png" alt="Logo">
+    <div>
+      <h1>Cálculo cotas tubería y coordenadas</h1>
+      <p class="sub">
+        Herramienta para cálculo de cotas y coordenadas de tubería por pendiente y geometría real.
+      </p>
+    </div>
   </div>
 
-  <!-- Dialog: autor -->
-  <dialog id="dlgAuthor">
-    <div class="dlg-hd">
-      <b>Información</b>
-      <button id="closeAuthor">Cerrar</button>
+  <div class="toolbar">
+    <button class="primary" id="btnBasic">Editar datos básicos</button>
+    <button id="btnCSV">Exportar CSV</button>
+    <button id="btnClear">Limpiar</button>
+  </div>
+</header>
+
+<section class="grid">
+  <div class="card">
+    <h2>Datos básicos</h2>
+    <div class="kv" id="basicKV"></div>
+  </div>
+
+  <div class="card">
+    <h2>Tabla de resultados</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+        <tr>
+          <th>Punto</th>
+          <th>Abs</th>
+          <th class="num">Dist (m)</th>
+          <th class="num">Cota Lomo</th>
+          <th class="num">Cota Excavación</th>
+          <th class="num">Cota Gravilla</th>
+          <th class="num">Norte</th>
+          <th class="num">Este</th>
+          <th>Tubo</th>
+        </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
     </div>
-    <div class="dlg-bd">
-      <p style="margin:0 0 10px; color:#111827; font-weight:700;">
-        Creado por: Sergio H. Rico Sierra – Ing. Topográfico
-      </p>
-      <p style="margin:0 0 14px; color:#6b7280; font-size:13px;">
-        Herramienta de cálculo y generación de cotas y coordenadas para tubería (visualización compatible con PC y móviles).
-      </p>
-    </div>
-    <div class="dlg-ft">
-      <button class="primary" id="okAuthor">Entendido</button>
-    </div>
-  </dialog>
+  </div>
+</section>
 
-  <!-- Dialog: básicos -->
-  <dialog id="dlgBasic">
-    <form method="dialog" id="formBasic">
-      <div class="dlg-hd">
-        <b>Datos básicos del tramo</b>
-        <button value="cancel">Cerrar</button>
-      </div>
+</div>
 
-      <div class="dlg-bd">
-        <div class="form">
-          <label>
-            Pendiente (%)
-            <input name="pendiente" type="number" step="0.001" placeholder="Ej: 2.000" required />
-          </label>
+<script>
+const ABS_START_M = 0.600;
+const ABS_END_BOX = 0.400;
+const ABS_PREFIX = "K0+";
 
-          <label>
-            Cota Lomo Pozo (K0+000.000)
-            <input name="cotaPozo" type="number" step="0.001" placeholder="Ej: 2561.704" required />
-          </label>
+const state = { basic:{}, rows:[] };
 
-          <label>
-            Cota Lomo Caja
-            <input name="cotaCaja" type="number" step="0.001" placeholder="Ej: 2561.893" required />
-          </label>
+function fmt(n,d=3){ return isFinite(n)?Number(n).toFixed(d):""; }
 
-          <label>
-            Longitud tubo (m)
-            <input name="longTubo" type="number" step="0.001" placeholder="Ej: 1.250" required />
-          </label>
+function absToText(m){
+  const s = m.toFixed(3).split(".");
+  return `${ABS_PREFIX}${s[0].padStart(3,"0")}.${s[1]}`;
+}
 
-          <label>
-            Diámetro de tubería (m)
-            <input name="diametro" type="number" step="0.001" placeholder="Ej: 0.254" required />
-          </label>
+function calcGeomLen(n0,e0,n1,e1){
+  return Math.hypot(n1-n0,e1-e0);
+}
 
-          <label>
-            Espesor pared tubo (m)
-            <input name="espesor" type="number" step="0.001" placeholder="Ej: 0.0065" required />
-          </label>
+function regenerateTable(){
+  const b = state.basic;
+  const slope = b.pendiente/100;
+  const outer = b.diametro + 2*b.espesor;
 
-          <label>
-            Nodo Pozo - Norte
-            <input name="nPozo" type="number" step="0.001" placeholder="Ej: 106689.337" required />
-          </label>
+  const Lgeom = calcGeomLen(b.nPozo,b.ePozo,b.nCaja,b.eCaja);
+  const Leff = Lgeom - (ABS_START_M + ABS_END_BOX);
+  const nT = Math.floor(Leff / b.longTubo);
 
-          <label>
-            Nodo Pozo - Este
-            <input name="ePozo" type="number" step="0.001" placeholder="Ej: 101688.028" required />
-          </label>
+  const uN = (b.nCaja-b.nPozo)/Lgeom;
+  const uE = (b.eCaja-b.ePozo)/Lgeom;
 
-          <label>
-            Nodo Caja - Norte
-            <input name="nCaja" type="number" step="0.001" placeholder="Ej: 106692.225" required />
-          </label>
+  state.rows = [];
 
-          <label>
-            Nodo Caja - Este
-            <input name="eCaja" type="number" step="0.001" placeholder="Ej: 101698.071" required />
-          </label>
+  for(let k=0;k<=nT;k++){
+    const dist = ABS_START_M + k*b.longTubo;
 
-          <label class="row2">
-            Longitud entre nodos (m) [calculada]
-            <input name="longEntreNodos" type="text" readonly placeholder="Se calcula automáticamente" />
-          </label>
+    const cotaLomo = b.cotaPozo + slope*dist;
+    const cotaExc  = cotaLomo - outer - 0.15;
+    const cotaGrav = cotaExc + 0.15;
 
-          <label class="row2">
-            Longitud efectiva tubería (m) = LongEntreNodos − 1.00
-            <input name="longEfectiva" type="text" readonly placeholder="Se calcula automáticamente" />
-          </label>
-
-          <label class="row2">
-            Número de tubos (Long. efectiva / Long. tubo) [FLOOR]
-            <input name="numTubesPreview" type="text" readonly placeholder="Se calcula automáticamente" />
-          </label>
-
-          <div class="row2 small">
-            Se generan N+1 puntos: desde K0+000.600 hasta K0+000.600 + N·LongTubo (incluye el final).
-          </div>
-        </div>
-      </div>
-
-      <div class="dlg-ft">
-        <button value="cancel">Cancelar</button>
-        <button class="primary" value="save">Guardar y recalcular tabla</button>
-      </div>
-    </form>
-  </dialog>
-
-  <script>
-    const STORAGE_KEY = "calculo_cotas_coord_v7";
-    const ABS_START_M = 0.600;
-    const ABS_END_BOX = 0.400;
-    const ABS_PREFIX = "K0+";
-
-    const state = { basic: {}, rows: [] };
-
-    const $ = (sel) => document.querySelector(sel);
-    const statusDot = $("#statusDot");
-    const statusText = $("#statusText");
-
-    function setStatus(kind, text){
-      statusText.textContent = text;
-      statusDot.classList.toggle("warn", kind === "warn");
-    }
-
-    function fmt(n, dec=3){
-      const num = Number(n);
-      if (!isFinite(num)) return "";
-      return num.toFixed(dec);
-    }
-
-    function showValOrDash(v, dec=3){
-      const s = fmt(v, dec);
-      return s ? s : "—";
-    }
-
-    function absToText(meters){
-      const s = (Number(meters)).toFixed(3);
-      const [a,b] = s.split(".");
-      const left = String(a ?? "0").padStart(3, "0");
-      const right = String(b ?? "000").padEnd(3, "0");
-      return `${ABS_PREFIX}${left}.${right}`;
-    }
-
-    function calcGeomLen(n0,e0,n1,e1){
-      return Math.hypot((n1-n0),(e1-e0));
-    }
-
-    function load(){
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-      try {
-        const parsed = JSON.parse(raw);
-        if (parsed?.basic) state.basic = parsed.basic;
-        if (Array.isArray(parsed?.rows)) state.rows = parsed.rows;
-      } catch(e){}
-    }
-
-    function save(){
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    }
-
-    function regenerateTable(){
-      const b = state.basic;
-
-      const pendiente = Number(b.pendiente);
-      const longTubo = Number(b.longTubo);
-      const cotaPozo = Number(b.cotaPozo);
-      const D = Number(b.diametro);
-      const e = Number(b.espesor);
-
-      const n0 = Number(b.nPozo), e0 = Number(b.ePozo);
-      const n1 = Number(b.nCaja), e1 = Number(b.eCaja);
-
-      const ok =
-        isFinite(pendiente) &&
-        isFinite(longTubo) && longTubo > 0 &&
-        isFinite(cotaPozo) &&
-        isFinite(D) && D > 0 &&
-        isFinite(e) && e >= 0 &&
-        isFinite(n0) && isFinite(e0) && isFinite(n1) && isFinite(e1);
-
-      if (!ok){ state.rows = []; return; }
-
-      const Lgeom = calcGeomLen(n0,e0,n1,e1);
-      if (!(Lgeom > 0)){ state.rows = []; return; }
-
-      const longEfectiva = Lgeom - (ABS_START_M + ABS_END_BOX);
-      if (!(longEfectiva > 0)){ state.rows = []; return; }
-
-      const nTubes = Math.max(0, Math.floor(longEfectiva / longTubo));
-      if (nTubes <= 0){ state.rows = []; return; }
-
-      // Vector unitario Pozo->Caja
-      const uN = (n1 - n0) / Lgeom;
-      const uE = (e1 - e0) / Lgeom;
-
-      const slope = pendiente / 100;
-      const outer = D + 2*e;
-
-      state.basic.longEntreNodos_calc = Number(Lgeom.toFixed(3));
-      state.basic.longEfectiva_calc = Number(longEfectiva.toFixed(3));
-      state.basic.numTubes_calc = nTubes;
-
-      const rows = [];
-      for (let k = 0; k <= nTubes; k++){
-        const dist = ABS_START_M + k * longTubo; // incluye el final
-        const abs = absToText(dist);
-
-        const cotaLomo = cotaPozo + slope * dist;
-        const cotaExc  = cotaLomo - outer;
-        const cotaGrav = cotaExc + 0.15;
-
-        const Norte = n0 + uN * dist;
-        const Este  = e0 + uE * dist;
-
-        let tuboInfo = "";
-        if (k < nTubes){
-          const absFin = absToText(dist + longTubo);
-          tuboInfo = `Tubo ${k+1}: ${abs} → ${absFin}`;
-        }
-
-        rows.push({
-          punto: String(k + 1),
-          abs,
-          dist: Number(dist.toFixed(3)),
-          cotaLomo: Number(cotaLomo.toFixed(3)),
-          cotaExc: Number(cotaExc.toFixed(3)),
-          cotaGravilla: Number(cotaGrav.toFixed(3)),
-          norte: Number(Norte.toFixed(3)),
-          este: Number(Este.toFixed(3)),
-          tuboInfo
-        });
-      }
-
-      state.rows = rows;
-    }
-
-    function renderBasic(){
-      const kv = $("#basicKV");
-      const b = state.basic;
-
-      const items = [
-        ["Pendiente (%)", showValOrDash(b.pendiente)],
-        ["Longitud entre nodos (m) [coord]", showValOrDash(b.longEntreNodos_calc)],
-        ["Longitud efectiva (m)", showValOrDash(b.longEfectiva_calc)],
-        ["Longitud tubo (m)", showValOrDash(b.longTubo)],
-        ["Número de tubos", b.numTubes_calc ? String(b.numTubes_calc) : "—"],
-        ["Cota Lomo Pozo (K0+000.000)", showValOrDash(b.cotaPozo)],
-        ["Cota Lomo Caja", showValOrDash(b.cotaCaja)],
-        ["Diámetro (m)", showValOrDash(b.diametro)],
-        ["Espesor pared (m)", showValOrDash(b.espesor)],
-        ["Nodo Pozo - Norte", showValOrDash(b.nPozo)],
-        ["Nodo Pozo - Este", showValOrDash(b.ePozo)],
-        ["Nodo Caja - Norte", showValOrDash(b.nCaja)],
-        ["Nodo Caja - Este", showValOrDash(b.eCaja)]
-      ];
-
-      kv.innerHTML = items.map(([k,v]) => `
-        <div class="k">${k}</div>
-        <div class="v ${v==="—" ? "empty":""}">${v}</div>
-      `).join("");
-    }
-
-    function renderRows(){
-      const tbody = $("#tbody");
-      tbody.innerHTML = "";
-
-      if (!state.rows.length){
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td colspan="9" style="color:rgba(17,24,39,.65); padding:16px;">
-          Sin datos calculados. Abre “Editar datos básicos”, ingresa valores y guarda.
-        </td>`;
-        tbody.appendChild(tr);
-        return;
-      }
-
-      for (const r of state.rows){
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${r.punto}</td>
-          <td>${r.abs}</td>
-          <td class="num">${fmt(r.dist)}</td>
-          <td class="num">${fmt(r.cotaLomo)}</td>
-          <td class="num">${fmt(r.cotaExc)}</td>
-          <td class="num">${fmt(r.cotaGravilla)}</td>
-          <td class="num">${fmt(r.norte)}</td>
-          <td class="num">${fmt(r.este)}</td>
-          <td>${r.tuboInfo || ""}</td>
-        `;
-        tbody.appendChild(tr);
-      }
-    }
-
-    // Dialog básicos
-    const dlgBasic = $("#dlgBasic");
-    const formBasic = $("#formBasic");
-
-    function recalcDerivedInDialog(){
-      const nPozo = Number(formBasic.nPozo.value);
-      const ePozo = Number(formBasic.ePozo.value);
-      const nCaja = Number(formBasic.nCaja.value);
-      const eCaja = Number(formBasic.eCaja.value);
-      const longTubo = Number(formBasic.longTubo.value);
-
-      let L = "";
-      let Le = "";
-      let nT = "";
-
-      if (isFinite(nPozo) && isFinite(ePozo) && isFinite(nCaja) && isFinite(eCaja)){
-        const Lgeom = calcGeomLen(nPozo,ePozo,nCaja,eCaja);
-        if (Lgeom > 0){
-          L = fmt(Lgeom);
-          const eff = Lgeom - (ABS_START_M + ABS_END_BOX);
-          if (eff > 0){
-            Le = fmt(eff);
-            if (isFinite(longTubo) && longTubo > 0){
-              nT = String(Math.max(0, Math.floor(eff / longTubo)));
-            }
-          }
-        }
-      }
-
-      formBasic.longEntreNodos.value = L;
-      formBasic.longEfectiva.value = Le;
-      formBasic.numTubesPreview.value = nT;
-    }
-
-    function openBasicDialog(){
-      const b = state.basic || {};
-      const fields = ["pendiente","cotaPozo","cotaCaja","longTubo","diametro","espesor","nPozo","ePozo","nCaja","eCaja"];
-      for (const k of fields) formBasic[k].value = (b[k] ?? "");
-      recalcDerivedInDialog();
-      dlgBasic.showModal();
-    }
-
-    ["nPozo","ePozo","nCaja","eCaja","longTubo"].forEach(name => formBasic[name].addEventListener("input", recalcDerivedInDialog));
-
-    formBasic.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const fd = new FormData(formBasic);
-      const getN = (k) => Number(fd.get(k));
-
-      state.basic = {
-        pendiente: getN("pendiente"),
-        cotaPozo: getN("cotaPozo"),
-        cotaCaja: getN("cotaCaja"),
-        longTubo: getN("longTubo"),
-        diametro: getN("diametro"),
-        espesor: getN("espesor"),
-        nPozo: getN("nPozo"),
-        ePozo: getN("ePozo"),
-        nCaja: getN("nCaja"),
-        eCaja: getN("eCaja")
-      };
-
-      regenerateTable();
-      save();
-      renderBasic();
-      renderRows();
-      dlgBasic.close();
-      setStatus("ok", "Datos guardados y tabla recalculada");
+    state.rows.push({
+      punto:k+1,
+      abs:absToText(dist),
+      dist,
+      cotaLomo,
+      cotaExc,
+      cotaGrav,
+      norte:b.nPozo + uN*dist,
+      este:b.ePozo + uE*dist,
+      tubo:k<nT?`Tubo ${k+1}`:""
     });
+  }
+}
 
-    // CSV
-    function csvCell(v){
-      const s = String(v ?? "");
-      if (/[",\n]/.test(s)) return `"${s.replace(/"/g,'""')}"`;
-      return s;
-    }
+function render(){
+  const tb=document.getElementById("tbody");
+  tb.innerHTML="";
+  state.rows.forEach(r=>{
+    tb.innerHTML+=`
+    <tr>
+      <td>${r.punto}</td>
+      <td>${r.abs}</td>
+      <td class="num">${fmt(r.dist)}</td>
+      <td class="num">${fmt(r.cotaLomo)}</td>
+      <td class="num">${fmt(r.cotaExc)}</td>
+      <td class="num">${fmt(r.cotaGrav)}</td>
+      <td class="num">${fmt(r.norte)}</td>
+      <td class="num">${fmt(r.este)}</td>
+      <td>${r.tubo}</td>
+    </tr>`;
+  });
+}
+</script>
 
-    function exportCSV(){
-      if (!state.rows.length){
-        setStatus("warn", "No hay tabla calculada para exportar");
-        return;
-      }
-
-      const b = state.basic;
-      const lines = [];
-
-      lines.push("SECCION,BASICO,VALOR");
-      const basics = [
-        ["Pendiente (%)", b.pendiente],
-        ["Longitud entre nodos (m) [coord]", b.longEntreNodos_calc],
-        ["Longitud efectiva (m)", b.longEfectiva_calc],
-        ["Longitud tubo (m)", b.longTubo],
-        ["Número de tubos", b.numTubes_calc],
-        ["Cota Lomo Pozo (K0+000.000)", b.cotaPozo],
-        ["Cota Lomo Caja", b.cotaCaja],
-        ["Diámetro (m)", b.diametro],
-        ["Espesor pared (m)", b.espesor],
-        ["Nodo Pozo - Norte", b.nPozo],
-        ["Nodo Pozo - Este", b.ePozo],
-        ["Nodo Caja - Norte", b.nCaja],
-        ["Nodo Caja - Este", b.eCaja]
-      ];
-      for (const [k,v] of basics) lines.push(`BASICOS,${csvCell(k)},${csvCell(v)}`);
-      lines.push("");
-
-      lines.push("Punto,Abs,Dist (m),Cota Lomo,Cota Excavación,Cota Gravilla,Norte,Este,Tubo");
-      for (const r of state.rows){
-        lines.push([r.punto,r.abs,r.dist,r.cotaLomo,r.cotaExc,r.cotaGravilla,r.norte,r.este,r.tuboInfo].map(csvCell).join(","));
-      }
-
-      const csv = lines.join("\n");
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "calculo_cotas_y_coordenadas.csv";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-      setStatus("ok", "CSV exportado");
-    }
-
-    function clearAll(){
-      if (!confirm("¿Seguro que deseas limpiar todos los datos?")) return;
-      localStorage.removeItem(STORAGE_KEY);
-      location.reload();
-    }
-
-    $("#btnBasic").addEventListener("click", openBasicDialog);
-    $("#btnCSV").addEventListener("click", exportCSV);
-    $("#btnClear").addEventListener("click", clearAll);
-
-    // Dialog autor al abrir
-    const dlgAuthor = $("#dlgAuthor");
-    $("#okAuthor").addEventListener("click", () => dlgAuthor.close());
-    $("#closeAuthor").addEventListener("click", () => dlgAuthor.close());
-
-    window.addEventListener("load", () => {
-      // mostrar una sola vez por navegador
-      const key = "author_shown_v1";
-      if (!sessionStorage.getItem(key)){
-        sessionStorage.setItem(key, "1");
-        dlgAuthor.showModal();
-      }
-    });
-
-    // Init
-    load();
-    if (Object.keys(state.basic || {}).length) regenerateTable();
-    renderBasic();
-    renderRows();
-  </script>
 </body>
 </html>
